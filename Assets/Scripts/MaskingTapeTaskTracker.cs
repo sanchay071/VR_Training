@@ -6,6 +6,7 @@ public class MaskingTapeTaskTracker : MonoBehaviour
 {
     public TaskUIManager taskUIManager;
     public XRSocketInteractor[] tapeSockets;
+    public GameObject[] toolArrowIndicator;
 
     private bool taskCompleted = false;
 
@@ -31,6 +32,15 @@ public class MaskingTapeTaskTracker : MonoBehaviour
             // Deactivate the arrow indicator
             if (arrowIndicator != null)
                 arrowIndicator.SetActive(false);
+
+            if(toolArrowIndicator != null)
+            {
+                foreach (var indicator in toolArrowIndicator)
+                {
+                    if (indicator != null)
+                        indicator.SetActive(true);
+                }
+            }
         }
     }
 
