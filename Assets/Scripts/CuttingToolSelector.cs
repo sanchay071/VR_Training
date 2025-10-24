@@ -31,6 +31,11 @@ public class CuttingToolSelector : MonoBehaviour
     [Header("Wrong Tool Messages")]
     [TextArea] public string[] wrongToolMessages;  // Explanations for each wrong tool
 
+    // Track the currently grabbed wrong tool
+    private XRGrabInteractable currentGrabbedWrongTool;
+    private Vector3 wrongToolStartPos;
+    private Quaternion wrongToolStartRot;
+
     void Start()
     {
         // Add listeners to all single-hand tools
@@ -105,6 +110,11 @@ public class CuttingToolSelector : MonoBehaviour
         // Disable the grabbed tool temporarily
         tool.enabled = false;
 
+        // Store its starting position/rotation for reset
+        currentGrabbedWrongTool = tool;
+        wrongToolStartPos = tool.transform.localPosition;
+        wrongToolStartRot = tool.transform.localRotation;
+
         // Set custom message
         if (popupMessageText != null)
         {
@@ -114,20 +124,19 @@ public class CuttingToolSelector : MonoBehaviour
             else
                 popupMessageText.text = "Wrong tool!";
         }
-
-        // Reset the tool after a short delay
-        StartCoroutine(ResetTool(tool, 1.0f));
     }
 
-    private IEnumerator ResetTool(XRGrabInteractable tool, float delay)
+    // Call this from OK button on the popup
+    public void OnWrongToolOkClicked()
     {
-        yield return new WaitForSeconds(delay);
-
-        if (tool != null)
+        if (currentGrabbedWrongTool != null)
         {
-            tool.transform.localPosition = tool.transform.localPosition;
-            tool.transform.localRotation = Quaternion.identity;
-            tool.enabled = true;
+            // Reset position and rotation
+            currentGrabbedWrongTool.transform.localPosition = wrongToolStartPos;
+            currentGrabbedWrongTool.transform.localRotation = wrongToolStartRot;
+            currentGrabbedWrongTool.enabled = true;
+
+            currentGrabbedWrongTool = null;
         }
 
         if (wrongToolPopup) wrongToolPopup.SetActive(false);
