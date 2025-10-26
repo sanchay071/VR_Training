@@ -4,7 +4,6 @@ using UnityEngine.XR.Interaction.Toolkit.Interactors;
 
 public class MaskingTapeTaskTracker : MonoBehaviour
 {
-    public TaskUIManager taskUIManager;
     public XRSocketInteractor[] tapeSockets;
     public GameObject[] toolArrowIndicator;
 
@@ -24,11 +23,8 @@ public class MaskingTapeTaskTracker : MonoBehaviour
     private void OnTapePlaced(SelectEnterEventArgs args)
     {
         // Check if all sockets are filled
-        if (!taskCompleted && AllSocketsFilled())
+        if (AllSocketsFilled())
         {
-            taskCompleted = true;
-            taskUIManager.CompleteTask();
-
             // Deactivate the arrow indicator
             if (arrowIndicator != null)
                 arrowIndicator.SetActive(false);
