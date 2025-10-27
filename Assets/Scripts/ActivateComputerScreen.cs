@@ -6,6 +6,10 @@ public class ActivateComputerScreen : MonoBehaviour
     public GameObject instructionCanvas2;    // To enable
     public GameObject computerScreenCanvas;  // To enable
 
+    [Header("Audio")]
+    public AudioSource audioSource;          // Plays the sound
+    public AudioClip activationClip;         // Sound clip to play
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("PlayerHand"))  // tag your finger/hand
@@ -13,6 +17,12 @@ public class ActivateComputerScreen : MonoBehaviour
             if (instructionCanvas1) instructionCanvas1.SetActive(false);
             if (instructionCanvas2) instructionCanvas2.SetActive(true);
             if (computerScreenCanvas) computerScreenCanvas.SetActive(true);
+
+            // Play sound
+            if (audioSource && activationClip)
+            {
+                audioSource.PlayOneShot(activationClip);
+            }
         }
     }
 }
