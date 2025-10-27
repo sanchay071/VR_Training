@@ -6,11 +6,12 @@ TagManager:
   tags:
   - Anchor
   - PlayerHand
+  - CuttingTool
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Tape
   - Water
   - UI
   - 
