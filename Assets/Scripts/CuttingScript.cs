@@ -174,12 +174,37 @@ public class CuttingMarkerTrigger : MonoBehaviour
         {
             Rigidbody rb = glassObject.AddComponent<Rigidbody>();
             rb.useGravity = false;
+            rb.isKinematic = true; // Freeze physics while floating
         }
-    
+
+        // Disable grabbing and collider during float
+        XRGrabInteractable grab = glassObject.GetComponent<XRGrabInteractable>();
+        if (grab != null) grab.enabled = false;
+
+        Collider col = glassObject.GetComponent<Collider>();
+        if (col != null) col.enabled = false;
+
+        // Disable all cutting point colliders
+        if (cuttingPoints != null)
+        {
+            foreach (var cp in cuttingPoints)
+                cp.enabled = false;
+        }
+
         // start coroutine from glass object to keep it running
         if (glassObject != null)
         {
-            glassObject.AddComponent<GlassFloatHelper>().BeginFloat(glassObject);
+            glassObject.AddComponent<GlassFloatHelper>().BeginFloat(glassObject, () =>
+        {
+            // Callback after float completes
+            if (grab != null) grab.enabled = true;
+            if (col != null) col.enabled = true;
+
+            Rigidbody rb = glassObject.GetComponent<Rigidbody>();
+            if (rb != null) rb.isKinematic = false;
+
+            Debug.Log("Glass finished floating and is now grabbable.");
+        });
         }
 
         // Now it’s safe to disable marker

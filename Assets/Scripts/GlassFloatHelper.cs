@@ -1,14 +1,15 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 public class GlassFloatHelper : MonoBehaviour
 {
-    public void BeginFloat(GameObject glass)
+    public void BeginFloat(GameObject glass, Action onComplete = null)
     {
-        StartCoroutine(FloatGlassSmoothly(glass));
+        StartCoroutine(FloatGlassSmoothly(glass, onComplete));
     }
 
-    private IEnumerator FloatGlassSmoothly(GameObject glassObject)
+    private IEnumerator FloatGlassSmoothly(GameObject glassObject, Action onComplete)
     {
         if (glassObject == null) yield break;
 
@@ -26,6 +27,9 @@ public class GlassFloatHelper : MonoBehaviour
 
         glassObject.transform.position = endPos;
         Debug.Log("Glass finished floating.");
+
+        // Invoke callback if provided
+        onComplete?.Invoke();
 
         // Optional cleanup — remove this helper after done
         Destroy(this);
